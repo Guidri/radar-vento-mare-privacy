@@ -9,19 +9,28 @@
 <body>
 <main>
 <h1>Eliminare l'account</h1>
-<p class="data">App Android “Radar Vento &amp; Mare” · sviluppatore: Guido Silvestri</p>
+<p class="data">App Android “Radar Vento &amp; Mare” · sviluppatore: Guidri</p>
 
-<h2>Dall'app (immediato)</h2>
+<h2>Elimina qui, subito</h2>
+<p>Accedi con l'email e la password dell'app: l'account e tutti i dati collegati vengono cancellati immediatamente. Non serve scrivere a nessuno.</p>
+
+<form id="modulo" class="box" autocomplete="on">
+  <label for="email">Email</label>
+  <input id="email" type="email" autocomplete="username" required>
+  <label for="password">Password</label>
+  <input id="password" type="password" autocomplete="current-password" required>
+  <label class="spunta"><input id="conferma" type="checkbox" required> Ho capito che l'eliminazione è definitiva</label>
+  <button id="bottone" type="submit">Elimina il mio account</button>
+  <button id="recupera" type="button" class="link">Password dimenticata?</button>
+  <p id="esito" role="status" aria-live="polite"></p>
+</form>
+
+<h2>Oppure dall'app</h2>
 <ol>
 <li>Apri Radar Vento &amp; Mare e tocca l'icona della campanella in alto (<em>Account e avvisi</em>).</li>
 <li>Scorri in fondo e tocca <em>Elimina account</em>.</li>
 <li>Scrivi la password e conferma.</li>
 </ol>
-
-<h2>Senza l'app</h2>
-<p>Scrivi a <a href="mailto:homeboy.sp@gmail.com?subject=Eliminazione%20account%20Radar%20Vento%20%26%20Mare">homeboy.sp@gmail.com</a>
-con oggetto <strong>“Eliminazione account Radar Vento &amp; Mare”</strong>, dall'indirizzo email con cui ti sei registrato.
-L'account viene eliminato entro 30 giorni e ricevi una conferma.</p>
 
 <h2>Cosa viene cancellato</h2>
 <ul>
@@ -34,11 +43,68 @@ L'account viene eliminato entro 30 giorni e ricevi una conferma.</p>
 <h2>Solo gli avvisi o solo i dati sul telefono</h2>
 <ul>
 <li>Per fermare gli avvisi senza eliminare l'account scrivi <code>/stop</code> al bot su Telegram.</li>
-<li>Per cancellare le impostazioni salvate sul telefono: <em>Impostazioni → Cancella i miei dati</em>.</li>
+<li>Per cancellare le impostazioni salvate sul telefono: <em>Impostazioni → Cancella i miei dati</em>, oppure disinstalla l'app.</li>
 </ul>
 
 <p><a href="index.html">Informativa sulla privacy completa</a></p>
-<footer>Radar Vento &amp; Mare · Guido Silvestri</footer>
+<footer>Radar Vento &amp; Mare · Guidri</footer>
 </main>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, deleteUser, sendPasswordResetEmail, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, doc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+// Configurazione web pubblica di Firebase (la stessa dell'app): i dati sono protetti dalle regole di Firestore
+const app = initializeApp({
+  apiKey: 'AIzaSyAkIBLWLRHY0Fj8EOB1vwnoYX1qqJDT_NQ',
+  authDomain: 'radar-vento-mare.firebaseapp.com',
+  projectId: 'radar-vento-mare',
+  appId: '1:432807839047:web:01ef07862c728cb0bfb862',
+});
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const $ = (id) => document.getElementById(id);
+const esito = (testo, ok) => { $('esito').textContent = testo; $('esito').className = ok ? 'ok' : 'errore'; };
+
+function messaggio(e) {
+  const c = e?.code || '';
+  if (c.includes('invalid-credential') || c.includes('wrong-password') || c.includes('user-not-found') || c.includes('invalid-email'))
+    return 'Email o password non corretti.';
+  if (c.includes('too-many-requests')) return 'Troppi tentativi: riprova tra qualche minuto.';
+  if (c.includes('network')) return 'Nessuna connessione: controlla internet e riprova.';
+  return 'Operazione non riuscita. Riprova tra poco.';
+}
+
+$('modulo').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  $('bottone').disabled = true;
+  esito('Eliminazione in corso…', true);
+  try {
+    const cred = await signInWithEmailAndPassword(auth, $('email').value.trim(), $('password').value);
+    await deleteDoc(doc(db, 'users', cred.user.uid)).catch(() => {}); // il profilo potrebbe non esistere
+    await deleteUser(cred.user);
+    $('modulo').reset();
+    esito('Fatto: il tuo account e i tuoi dati sono stati eliminati.', true);
+  } catch (e) {
+    await signOut(auth).catch(() => {});
+    esito(messaggio(e), false);
+  } finally {
+    $('bottone').disabled = false;
+  }
+});
+
+$('recupera').addEventListener('click', async () => {
+  const email = $('email').value.trim();
+  if (!email) { esito('Scrivi prima la tua email qui sopra.', false); return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    esito('Se l\'email è registrata, ti abbiamo mandato un link per scegliere una nuova password.', true);
+  } catch (e) {
+    esito(messaggio(e), false);
+  }
+});
+</script>
 </body>
 </html>
