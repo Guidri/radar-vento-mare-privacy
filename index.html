@@ -9,7 +9,7 @@
 <body>
 <main>
 <h1>Informativa sulla privacy</h1>
-<p class="data">App Android “Radar Vento &amp; Mare” · ultimo aggiornamento: 30 ottobre 2026</p>
+<p class="data">App Android “Radar Vento &amp; Mare” · ultimo aggiornamento: 31 ottobre 2026</p>
 
 <div class="box">
 <p><strong>In breve.</strong> Puoi usare l'app senza registrarti: in quel caso non raccogliamo nessun dato personale e le impostazioni restano sul telefono.
@@ -24,12 +24,15 @@ Niente pubblicità, niente profilazione, nessuna vendita di dati.</p>
 <div class="tab"><table>
 <tr><th>Dato</th><th>Quando</th><th>Perché</th></tr>
 <tr><td>Sport, soglie, spot preferiti</td><td>Sempre, salvati sul telefono; sul server solo se hai un account</td><td>Calcolare il voto degli spot e ritrovare le impostazioni su un altro telefono</td></tr>
+<tr><td>Posizione del telefono</td><td>Solo se tocchi “Usa la mia posizione” quando aggiungi uno spot</td><td>Compilare le coordinate del nuovo spot. Non viene mai letta in background; le coordinate diventano quelle dello spot (salvate sul telefono e, se hai un account, sul tuo profilo) e vengono inviate a Open-Meteo per le previsioni</td></tr>
 <tr><td>Email e password</td><td>Se ti registri</td><td>Accesso all'account. La password è gestita da Google Firebase Authentication e non è mai visibile a noi</td></tr>
 <tr><td>Identificativo utente</td><td>Se ti registri</td><td>Collegare impostazioni, avvisi e chat Telegram al tuo account</td></tr>
 <tr><td>ID della chat Telegram e nome visualizzato</td><td>Se premi “Collega Telegram”</td><td>Mandarti gli avvisi sugli spot</td></tr>
+<tr><td>Gruppi Telegram di zona: nome del gruppo, ID, link d'invito e zona</td><td>Quando un amministratore aggiunge il bot a un gruppo e scrive /zona</td><td>Mostrare il gruppo nella sezione Community e pubblicarvi il bollettino. Non leggiamo né salviamo i messaggi del gruppo</td></tr>
+<tr><td>Segnalazioni di un gruppo</td><td>Se tocchi “Segnala gruppo”</td><td>Moderare la sezione Community (salviamo identificativo utente, gruppo e motivo)</td></tr>
 <tr><td>Registro degli avvisi inviati</td><td>Se ricevi avvisi</td><td>Evitare di mandarti lo stesso avviso due volte. Cancellato dopo 30 giorni</td></tr>
 </table></div>
-<p>L'app <strong>non</strong> usa la tua posizione, la rubrica, le foto o identificativi pubblicitari, e non contiene strumenti di analisi o pubblicità.</p>
+<p>L'app <strong>non</strong> legge la posizione in background e non usa la rubrica, le foto o identificativi pubblicitari; non contiene strumenti di analisi o pubblicità.</p>
 
 <h2>Base giuridica</h2>
 <p>Esecuzione del servizio che richiedi creando l'account e collegando Telegram (art. 6.1.b GDPR).</p>
@@ -37,8 +40,8 @@ Niente pubblicità, niente profilazione, nessuna vendita di dati.</p>
 <h2>Con chi condividiamo i dati</h2>
 <ul>
 <li><strong>Google Firebase</strong> (Google Ireland Ltd.): autenticazione e database dell'account.</li>
-<li><strong>Telegram</strong>: consegna dei messaggi del bot, solo se colleghi la chat.</li>
-<li><strong>Open-Meteo</strong>: riceve le coordinate degli spot per le previsioni, mai dati che ti identificano. Come ogni sito, vede l'indirizzo IP da cui parte la richiesta.</li>
+<li><strong>Telegram</strong>: consegna dei messaggi del bot, solo se colleghi la chat. I gruppi di zona sono chat Telegram gestite dai loro amministratori e regolate dalle condizioni di Telegram.</li>
+<li><strong>Open-Meteo</strong> (open-meteo.com, fonte di tutte le previsioni, licenza CC BY 4.0): riceve le coordinate degli spot per calcolare le previsioni, mai dati che ti identificano. Come ogni sito, vede l'indirizzo IP da cui parte la richiesta.</li>
 </ul>
 <p>Il bot che manda gli avvisi viene eseguito periodicamente su <strong>GitHub Actions</strong> (GitHub Inc.), che legge le impostazioni dal database solo il tempo necessario al controllo. I dati non vengono venduti né ceduti ad altri.</p>
 
